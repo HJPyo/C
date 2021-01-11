@@ -2,5 +2,5 @@
 
 int main()
 {
-	printf("%d %d", 1^3, 2^3);
+	printf("%d", 1 > 2);
 }
