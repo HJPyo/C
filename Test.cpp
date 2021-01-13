@@ -1,6 +1,12 @@
-#include<stdio.h>
+#include<iostream>
+#include<string>
+using namespace std;
 
 int main()
 {
-	printf("%d", 1 > 2);
+	string str;
+	getline(cin,str);
+	if(str == "Hello"){
+		printf("World!");
+	}
 }

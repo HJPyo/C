@@ -1,37 +1,95 @@
-#include<stdio.h>
+#include<iostream>
+#include<string>
+using namespace std;
 
-class DequeContainer{
+int query;
+
+class Deque{
 	public:
-		int ar[10001] = {}, DqSize = 0;
+		int ar[10001] = {}, size = 0;
 		
-		void Push_F(int x)
-		{
-			if(DqSize > 0){
-				for(int i = DqSize++; i > 0; i--)
+		void PushFront(int x){
+			if(size>0){
+			for(int i = size; i > 0; i--)
 				ar[i] = ar[i-1];
 			}
 			ar[0] = x;
+			size++;
 		}
-		
-		void Push_B(int x)
-		{
-			ar[DqSize++] = x;
+		void PushBack(int x){
+			ar[size] = x;
+			size++;
 		}
-		
-		void Pop_F()
-		{
-			if(DqSize-- == 0){
-				printf("-1\n");
-				break;
+		void PopFront(){
+			if(size==0){
+				cout << "-1\n";
+				return;
 			}
-			printf("%d\n", ar[0]);
-			for(int i = 0; i < DqSize; i++){
-				
+			cout << ar[0] << '\n';
+			for(int i = 0; i < size; i++)
+				ar[i] = ar[i+1];
+			size--;
+		}
+		void PopBack(){
+			if(size==0){
+				cout << "-1\n";
+				return;
 			}
+			cout << ar[size-1] << '\n';
+			size--;
+		}
+		void Size(){
+			cout << size << '\n';
+		}
+		void Empty(){
+			cout << (size == 0 ? 1 : 0) << '\n';
+		}
+		void Front(){
+			if(size==0) cout << "-1\n";
+			else cout << ar[0] << '\n';
+		}
+		void Back(){
+			if(size==0) cout << "-1\n";
+			else cout << ar[size-1] << '\n';
 		}
 };
 
 int main()
 {
+	scanf("%d", &query);
 	
+	Deque Dq;
+	
+	for(int i = 0; i < query; i++){
+		int X;
+		string Q;
+		cin >> Q;
+		
+		if(Q == "push_front"){
+			cin >> X;
+			Dq.PushFront(X);
+		}
+		if(Q == "push_back"){
+			cin >> X;
+			Dq.PushBack(X);
+		}
+		if(Q == "pop_front"){
+			Dq.PopFront();
+		}
+		if(Q == "pop_back"){
+			Dq.PopBack();
+		}
+		if(Q == "size"){
+			Dq.Size();
+		}
+		if(Q == "empty"){
+			Dq.Empty();
+		}
+		if(Q == "front"){
+			Dq.Front();
+		}
+		if(Q == "back"){
+			Dq.Back();
+		}
+	}
 }
