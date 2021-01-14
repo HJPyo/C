@@ -1,12 +1,13 @@
 #include<iostream>
-#include<string>
+#include<cstring>
+#include<list>
 using namespace std;
 
 int main()
 {
-	string str;
-	getline(cin,str);
-	if(str == "Hello"){
-		printf("World!");
+	char C[10] = "Hello";
+	list<char>L(&C[0], &C[strlen(C)-1]);
+	for(auto &i:L){
+		cout << L;
 	}
 }
