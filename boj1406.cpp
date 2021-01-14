@@ -1,6 +1,5 @@
 #include<stdio.h>
 #include<cstring>
-#include<list>
 using namespace std;
 
 char str[100001];
