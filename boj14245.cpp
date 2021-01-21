@@ -1,72 +1,79 @@
 #include<stdio.h>
-#define M (L+R)/2
+#define M ((L+R)>>1)
 
-int n, m, o, tree[2222222], lazy[2222222];
+int n, k, Bnum, tree[2222222], lazy[2222222];
 
-void prop(int L, int R, int N)
+void propagate(int L, int R, int Node)
 {
-	if(!lazy[N]) return;
+	if(!lazy[Node]) return;
+	
 	if(L < R){
-		lazy[N<<1] ^= lazy[N];
-		lazy[N<<1|1] ^= lazy[N];
+		lazy[Node<<1] ^= lazy[Node];
+		lazy[Node<<1|1] ^= lazy[Node];
 	}
-	if((R-L+1) & 1){
-		tree[N] ^= lazy[N];
-	}
-	lazy[N] = 0;
+	tree[Node] ^= lazy[Node];
+	lazy[Node] = 0;
 }
 
-int update(int L, int R, int N, int S, int E, int V)
+int update(int L, int R, int Node, int S, int E, int Val)
 {
-	prop(L, R, N);
-	if(L <= S && E <= R){
-		lazy[N] = V;
-		prop(L, R, N);
-		return tree[N];
+	propagate(L,R,Node);
+	
+	if(S <= L && R <= E){
+		lazy[Node] ^= Val;
+		propagate(L,R,Node);
+		return tree[Node];
 	}
-	else if(E < L || R < S){
-		return tree[N];
+	else if(R < S || E < L){
+		return tree[Node];
 	}
 	else{
-		return tree[N] = 
-			update(L,M,N<<1,S,E,V) +
-			update(M+1,R,N<<1|1,S,E,V);
+		return tree[Node] = 
+			update(L,M,Node<<1,S,E,Val) ^
+			update(M+1,R,Node<<1|1,S,E,Val);
 	}
 }
 
-int query(int L, int R, int N, int T)
+int Xor(int L, int R, int Node, int T)
 {
-	prop(L, R, N);
-	if(T < L || R < T){
+	propagate(L,R,Node);
+	
+	if(T <= L && R <= T){
+		return tree[Node];
+	}
+	else if(R < T || T < L){
 		return 0;
 	}
-	else if(L < R){
-		return query(L,M,N<<1,T) + query(M+1,R,N<<1|1,T);
-	}
 	else{
-		return tree[N];
+		return Xor(L,M,Node<<1,T) + Xor(M+1,R,Node<<1|1,T);
 	}
 }
 
 int main()
 {
 	scanf("%d", &n);
-	for(o=1; o<n; o*=2);
+	for(Bnum = 1; Bnum < n; Bnum<<=1);
+	//printf("%d\n", Bnum);
+	
 	for(int i = 0; i < n; i++)
-	scanf("%d", &tree[i+o]);
-	scanf("%d", &m);
-	while(m--){
-		int a;
-		scanf("%d", &a);
-		if(a==1){
-			int l, r, v;
-			scanf("%d %d %d", &l, &r, &v);
-			update(1,o,1,l+1,r+1,v);
+		scanf("%d", &tree[i+Bnum]);
+	
+	for(int i = Bnum-1; i > 0; i--)
+		tree[i] = tree[i<<1] ^ tree[i<<1|1];
+	
+	scanf("%d", &k);
+	while(k--){
+		int Query;
+		scanf("%d", &Query);
+		if(Query == 1){
+			int s, e, Val;
+			scanf("%d %d %d", &s, &e, &Val);
+			update(1,Bnum,1,s+1,e+1,Val);
 		}
-		if(a==2){
+		else{
 			int t;
 			scanf("%d", &t);
-			printf("%d\n", query(1,o,1,t+1));
+			printf("%d\n", Xor(1,Bnum,1,t+1));
 		}
 	}
 }
