@@ -19,5 +19,5 @@ int main()
 			dp[next] = min(dp[next],dp[i]+1);
 		}
 	}
-	printf("%d ", (dp[n] == INF) ? -1 : dp[n]);
+	printf("%d ", (dp[n-1] == INF) ? -1 : dp[n-1]);
 }

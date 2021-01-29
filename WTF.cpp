@@ -1,8 +1,8 @@
 #include<stdio.h>
+char ar[149] = {};
 int main()
 {
-	char ar[1<<20];
-	FILE *fp = fopen("test.cpp", "r");
+	FILE *fp = fopen("WTF.cpp", "r");
 	fread(ar, sizeof(ar), 1, fp);
 	printf("%s", ar);
 	fclose(fp);
