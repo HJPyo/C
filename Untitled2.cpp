@@ -1,7 +1,9 @@
 #include<stdio.h>
+#include<math.h>
 
 int main()
 {
-	for(int i = 1; i < 101; i++)
-	printf("%d\n", i);
+	int x1, x2, y1, y2;
+	scanf("%d %d %d %d", &x1, &y1, &x2, &y2);
+	printf("%.10llf", sqrt(pow(x1-x2,2) + pow(y1-y2,2)));
 }

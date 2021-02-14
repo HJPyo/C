@@ -1,21 +1,20 @@
 #include<stdio.h>
 
-__int64 n, m, dp[101];
+long long int n, m;
+long double ans = 1;
 
-__int64 fac(__int64 x)
+long long int min(long long int x, long long int y)
 {
-	if(x < 3) return x;
-	if(dp[x]) return dp[x];
-	return dp[x] = x * fac(x-1);
+	return x < y ? x : y;
 }
 
 int main()
 {
-	scanf("%I64d %I64d", &n, &m);
-	printf("%I64d", fac(n));
-	/*
-	long long int top = fac(n);
-	long long int down = fac(m) * fac(n-m);
-	printf("%lld", top/down);
-	*/
+	scanf("%lld %lld", &n, &m);
+	m = min(m, n-m);
+	for(int i = 0; i < m; i++){
+		ans *= (double)n-i;
+		ans /= (double)m-i;
+	}
+	printf("%lld", (long long int)ans);
 }
