@@ -1,38 +1,56 @@
 #include<stdio.h>
+#include<string.h>
 
-int k, vis[16], spring[16], orange[16], dp[16][16];
+struct sum{ int pow, weak; }ar[18];
+int n, dp[18][18];
 
-int f(int p1, int p2)
+int min(int x, int y)
 {
-	vis[0] = vis[15] = 0;
+	return x < y ? x : y;
+}
+
+int max(int x, int y)
+{
+	return x > y ? x : y;
+}
+
+int f(int x, int y)
+{
+	printf(">>%d %d %d\n", x, y, dp[x][y]);
+	if(x == 15 && y == 0) return 1;
+	if(dp[x][y] != -1) return dp[x][y];
 	
-	if(p1 == 15 && p2 == 0) return 1;
-	if(dp[p1][p2]) return dp[p1][p2];
+	dp[x][y] = 0;
 	
-	for(int i = p1-spring[p1]; i <= p1+spring[p1]; i++){
-		if(i < 0 || i > 15 || i == p1) continue;
-		if(!spring[i] || vis[i]) continue;
-		for(int j = p2-spring[p2]; j <= p2+spring[p2]; j++){
-			if(j < 0 || j > 15 || j == p2 || j == i) continue;
-			if(!spring[j] || vis[j]) continue;
-			if(!orange[j]) continue;
-			
-			vis[p1] = vis[p2] = 1;
-			dp[p1][p2] += f(i,j) % 1000;
-			vis[p1] = vis[p2] = 0;
+	if(x < 15){
+		int moval = ar[x].pow;
+		for(int i = max(0,x-moval); i <= min(15,x+moval); i++){
+			if(i == x) continue;
+			if(ar[i].pow != 0) dp[x][y] = (dp[x][y] + f(i,y)) % 1000;
 		}
 	}
-	return dp[p1][p2] % 1000;
+	if(y > 0){
+		int moval = ar[y].pow;
+		for(int i = max(0,y-moval); i <= min(15,y+moval); i++){
+			if(i == y || !ar[i].weak) continue;
+			if(ar[i].pow != 0) dp[x][y] = (f(x,i) + dp[x][y]) % 1000;
+		}
+	}
+	
+	return dp[x][y];
 }
 
 int main()
 {
-	scanf("%d", &k);
-	while(k--){
+	scanf("%d", &n);
+	for(int i = 0; i < n; i++){
 		int a, b, c;
 		scanf("%d %d %d", &a, &b, &c);
-		spring[a] = b;
-		orange[a] = c;
+		ar[a].pow = b;
+		ar[a].weak = c;
 	}
+	
+	memset(dp,-1,sizeof(dp));
+	
 	printf("%d", f(0,15));
- } 
+}

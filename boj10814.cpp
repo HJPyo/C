@@ -1,21 +1,31 @@
 #include<iostream>
 #include<algorithm>
-#include<vector>
 #include<string>
 using namespace std;
 
+struct info{
+	int idx, age;
+	string name;
+}ar[100001];
 int n;
-vector<pair<int,string> >ar(100001,{0,"asdf"});
+
+bool cmp(info x, info y)
+{
+	if(x.age == y.age) return x.idx < y.idx;
+	else return x.age < y.age;
+}
 
 int main()
 {
 	cin >> n;
 	for(int i = 0; i < n; i++){
-		cin >> ar[i].first >> ar[i].second;
+		cin >> ar[i].age >> ar[i].name;
+		ar[i].idx = i;
 	}
-	sort(ar.begin(), ar.end());
+	
+	sort(ar,ar+n,cmp);
 	
 	for(int i = 0; i < n; i++){
-		cout << ar[i].first << ' ' << ar[i].second << '\n';
+		cout << ar[i].age << " "+ar[i].name << '\n';
 	}
 }

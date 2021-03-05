@@ -1,22 +1,24 @@
 #include<stdio.h>
-#define M 103
 
-int n, m, ar[100], dp[100][M+1];
-
-int f(int x, int y)
-{
-	if(x == n || y > m) return 0;
-	if(y == m) return 1;
-	if(dp[x][y%M]) return dp[x][y%M];
-	
-	return dp[x][y%M] = f(x,(y+ar[x])%M) + f(x+1,y%M);
-}
+int n, k, ar[101], dp[10001];
 
 int main()
 {
-	scanf("%d %d", &n, &m);
-	for(int i = 0; i < n; i++){
+	scanf("%d %d", &n, &k);
+	for(int i = 1; i <= n; i++){
 		scanf("%d", &ar[i]);
 	}
-	printf("%d", f(0,0));
+	
+	dp[0] = 1;
+	
+	for(int i = 1; i <= n; i++){
+		int now = ar[i];
+		for(int j = 0; j <= k; j++){
+			if(j - now >= 0){
+				dp[j] += dp[j-now];
+			}
+		}
+	}
+	
+	printf("%d", dp[k]);
 }
