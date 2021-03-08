@@ -17,15 +17,17 @@ int main()
 	LL int ans = 0;
 	
 	if(n > 1022){
-		return 0;
+		ans = -1;
+		goto END;
 	}
 	
 	while(n--){
 		ans = -pQ.top();
-		printf("%lld,", ans);
 		pQ.pop();
 		for(int i = (ans%10)-1; i >= 0; i--){
 			pQ.push(-(ans*10+i));
 		}
 	}
+	END:
+	printf("%lld", ans);
 }

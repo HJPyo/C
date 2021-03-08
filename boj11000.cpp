@@ -1,38 +1,33 @@
 #include<stdio.h>
-#include<vector>
-#include<algorithm>
+#include<queue>
 using namespace std;
 
-int n, vis[200002], ans = 0;
-struct s{ int x, y; };
-vector<s>v;
-
-bool cmp(s a, s b){ return a.y < b.y; }
-
-int f(int now, int time)
-{
-	vis[now] = 1;
-	for(int i = now; i < n; i++){
-		if(!vis[i] && v[i].x >= time){
-			return f(i, v[i].y);
-		}
-	}
-	return 1;
-}
+int n;
+priority_queue<pair<int,int>>pQ1;
+priority_queue<int>pQ2;
 
 int main()
 {
 	scanf("%d", &n);
-	for(int i = 0, j, k; i < n; i++){
-		scanf("%d %d", &j, &k);
-		v.push_back((s){j,k});
-	}
-	sort(v.begin(), v.end(), cmp);
 	
 	for(int i = 0; i < n; i++){
-		if(!vis[i]){
-			ans += f(i,v[i].y);
+		int a, b;
+		scanf("%d %d", &a, &b);
+		pQ1.push({-a,-b});
+	}
+	
+	while(!pQ1.empty()){
+		int st = -pQ1.top().first;
+		int en = -pQ1.top().second;
+		pQ1.pop();
+		
+		if(pQ2.empty()) pQ2.push(-en);
+		else{
+			int before = -pQ2.top();
+			if(before <= st) pQ2.pop();
+			pQ2.push(-en);
 		}
 	}
-	printf("%d", ans);
+	
+	printf("%d", pQ2.size());
 }

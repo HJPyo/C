@@ -21,6 +21,8 @@ int main()
 			int cnt = Q.front().second.second;
 			Q.pop();
 			
+			printf(">>%d\n", now);
+			
 			if(now < 0)  continue;
 			
 			if(now == b){
@@ -29,7 +31,7 @@ int main()
 			}
 			
 			Q.push({a+dis-1,{dis-1,cnt+1}});
-			Q.push({a+dis,{dis,cnt+1}});
+			if(dis != 0)Q.push({a+dis,{dis,cnt+1}});
 			Q.push({a+dis+1,{dis+1,cnt+1}});
 		}
 	}
