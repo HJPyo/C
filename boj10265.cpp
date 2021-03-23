@@ -1,56 +1,88 @@
 #include<stdio.h>
-#include<algorithm>
+#include<vector>
+#include<stack>
+#define MAX 1001
 using namespace std;
 
-int n, k, ar[1001], vis[1001], cyc[1001], ans[1001], back_edge[1001], group[1001], cnt = 1;
+int n, k;
+vector<int>needs[MAX], R_needs[MAX], vis(MAX,0), boss(MAX,0);
+vector<vector<int>>SCC;
+stack<int>st;
 
-int dfs(int x)
+vector<int>item;
+
+void dfs(int x)
 {
-	if(vis[x]) return x;
-	if(cyc[x]) return 0;
 	vis[x] = 1;
-	cyc[x] = 1;
-	int top = dfs(ar[x]);
-	vis[x] = 0;
-	if(top != 0){
-		ans[x] = cnt;
-		if(x != top)
-			return top;
-		else
-			cnt++;
+	
+	for(int i = 0; i < needs[x].size(); i++){
+		int next = needs[x][i];
+		if(!vis[next]) dfs(next);
 	}
-	return 0;
+	
+	st.push(x);
+	return;
 }
 
-int dp[1001][1001];
-
-int f(int x, int y)
+vector<int> R_dfs(int x)
 {
-	if(y > k) return -999999999;
-	if(x == cnt || y == k) return y;
-	if(dp[x][y]) return dp[x][y];
-	return dp[x][y] = max(f(x+1,y+group[x]), f(x+1,y));
+	vis[x] = 0;
+	vector<int>tmp1;
+	tmp1.push_back(x);
+	
+	for(int i = 0; i < R_needs[x].size(); i++){
+		int next = R_needs[x][i];
+		if(vis[next]){
+			vector<int>tmp2 = R_dfs(next);
+			tmp1.insert(tmp1.end(),tmp2.begin(),tmp2.end());
+		}
+	}
+	
+	return tmp1;
 }
 
 int main()
 {
 	scanf("%d %d", &n, &k);
-	for(int i = 1; i <= n; i++){
-		scanf("%d", &ar[i]);
-		back_edge[ar[i]] = 1;
+	
+	for(int i = 1, j; i <= n; i++){
+		scanf("%d", &j);
+		needs[i].push_back(j);
+		R_needs[j].push_back(i);
 	}
 	
 	for(int i = 1; i <= n; i++){
-		dfs(i);
+		if(!vis[i]) dfs(i);
+	}
+	
+	while(!st.empty()){
+		int now = st.top();
+		st.pop();
+		
+		if(vis[now]){
+			SCC.push_back(R_dfs(now));
+			
+			int now = SCC.size()-1;
+			int now_size = SCC[now].size();
+			if(now_size > 2){
+				for(int i = 0; i < now_size; i++){
+					boss[SCC[now][i]] = SCC[now][i];
+				}
+			}
+			else{
+				boss[SCC[now][0]] = needs[SCC[now][0]][0];
+			}
+		}
+	}
+	
+	for(int i = 0; i < SCC.size(); i++){
+		for(int j = 0; j < SCC[i].size(); j++){
+			printf("[%d]", SCC[i][j]);
+		}
+		puts("");
 	}
 	
 	for(int i = 1; i <= n; i++){
-		group[ans[i]]++;
+		printf("%d ", boss[i]);
 	}
-	
-	for(int i = 1; i <= n; i++){
-		if(!back_edge[i] && ans[ar[i]]) group[cnt++]++;
-	}
-	
-	printf("%d", f(1,0));
 }
