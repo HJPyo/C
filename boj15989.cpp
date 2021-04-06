@@ -1,22 +1,30 @@
 #include<stdio.h>
 
-int k;
-long int dp[10001][4];
+int T;
+long long dp[10001][5];
 
-unsigned int f(int x, int y)
-{
-	if(x < 0 || y > 3) return 0;
-	if(x == 0) return 1;
+long long int f(int x, int y){
+	if(x < 0) return 0;
+	if(x == 1) return 1;
 	if(dp[x][y]) return dp[x][y];
-	return dp[x][y] = f(x-y,y) + f(x-(y+1),y+1);
+	
+	for(int i = y; i <= 3; i++){
+		dp[x][y] += f(x-i,i);
+	}
+	
+	return dp[x][y];
 }
 
-int main()
-{
-	scanf("%d", &k);
-	while(k--){
+int main(){
+	scanf("%d", &T);
+	
+	while(T--){
 		int n;
 		scanf("%d", &n);
-		printf("%u\n", f(n,1));
+		long long int tmp = 0;
+		for(int i = 1; i <= 3; i++){
+			tmp += f(n-i,i);
+		}
+		printf("%lld\n", tmp);
 	}
 }

@@ -1,6 +1,5 @@
 #include<stdio.h>
 
-int main()
-{
-	printf("%d %d", 1<<5, (1<<5)-1);
+int main(){
+	printf("%d %d %d", '0', '9', '*');
 }

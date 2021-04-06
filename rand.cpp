@@ -1,13 +1,9 @@
-#include<stdio.h>
+#include<iostream>
 #include<stdlib.h>
 #include<time.h>
+using namespace std;
 
-int main()
-{
+int main(){
 	srand(time(NULL));
-	int n = rand()%100000 + 1;
-	printf("%d\n", n);
-	for(int i = 0; i < n; i++){
-		printf("%d\n", rand()%100000 + 1);
-	}
+	printf(rand() & 1 ? "¸Ô¾î" : "¸ÔÁö¸¶");
 }
