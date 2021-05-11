@@ -1,43 +1,68 @@
 #include<stdio.h>
+#include<string.h>
 #include<math.h>
-#define INF 1999999999
-#define min(x,y) (x < y ? x : y)
+#define MAX 1005
 
-int n, k;
-struct xy{
+struct xypos{
 	int x, y;
-}query[1005], dp[1005][1005][3];
+}ar[MAX];
 
-int dist(int x1, int x2, int y1, int y2){
-	return abs(x2-x1) + abs(y2-y1);
+int n, k, dp[MAX][MAX], bt[MAX][MAX];
+
+int dist(xypos A, xypos B){
+	return abs(A.x - B.x) + abs(A.y - B.y);
 }
 
-xy f(int x1, int y1, int cnt1, int x2, int y2, int cnt2, int time, int before){
-	xy &now = dp[cnt1][cnt2][before];
-	if(now.x) return now;
-	if(time == k) return {0,0};
+int min(int x, int y){
+	return x < y ? x : y;
+}
+
+int f(xypos A, xypos B, int x, int y, int idx){
+	int &ret = dp[x][y];
 	
-	int nx = query[time].x;
-	int ny = query[time].y;
-	xy Xgo = f(nx,ny,cnt1+1,x2,y2,cnt2,time+1,1);
-	xy Ygo = f(x1,y1,cnt1,nx,ny,cnt2+1,time+1,2);
-	Xgo.x += dist(x1,nx,y1,ny); Xgo.y = 1;
-	Ygo.x += dist(x2,nx,y2,ny); Ygo.y = 2;
+	if(ret != -1) return ret;
+	if(idx > k) return 0;
 	
-	if(Xgo.x < Ygo.x) now = Xgo;
-	else now = Ygo;
+	int Adis = dist(A, ar[idx-1]);
+	int Bdis = dist(B, ar[idx-1]);
+	int Ago = Adis + f(ar[idx-1], B, idx, y, idx+1);
+	int Bgo = Bdis + f(A, ar[idx-1], x, idx, idx+1);
 	
-	return now;
+	if(Ago < Bgo){
+		ret = Ago;
+		bt[x][y] = 1;
+	}
+	else{
+		ret = Bgo;
+		bt[x][y] = 2;
+	}
+	
+	return ret;
 }
 
 int main(){
 	scanf("%d %d", &n, &k);
 	
 	for(int i = 0; i < k; i++){
-		scanf("%d %d", &query[i].x, &query[i].y);
+		scanf("%d %d", &ar[i].x, &ar[i].y);
 	}
 	
-	printf("%d\n", f(1,1,0,n,n,0,0,0).x);
+	memset(dp, -1, sizeof(dp));
+	
+	int ans = f({1,1},{n,n},0,0,1), iA = 0, iB = 0;
+	
+	printf("%d\n", ans);
+	
+	for(int i = 1; i <= k; i++){
+		printf("%d\n", bt[iA][iB]);
+		
+		if(bt[iA][iB] == 1){
+			iA = i;
+		}
+		else{
+			iB = i;
+		}
+	}
 	
 	return 0;
 }

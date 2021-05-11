@@ -1,40 +1,57 @@
-#include<stdio.h>
+#include<iostream>
 #include<vector>
-#define INF 1999999999
+#include<queue>
+#define INF 999999999
 using namespace std;
 
-int n, m, gas[2505], vis[2505];
-vector<int>dp(2505,INF);
-vector< pair<int,int> >len[2505];
+struct inqueue{
+	int cost, sum, idx;
+	vector<int>vis;
+};
 
-int min(int x, int y){ return x < y ? x : y; }
-
-int f(int now, int low)
-{
-	if(now == n) return 0;
-	if(dp[now] != INF) return dp[now];
-	vis[now]++;
-	low = min(low,gas[now]);
-	for(int i = 0; i < len[now].size(); i++){
-		int next = len[now][i].first;
-		int dis = len[now][i].second;
-		if(vis[next] < 3)
-			dp[now] = dis*low + min(dp[now], f(next,low));
+struct cmp{
+	bool operator()(inqueue x, inqueue y){
+		return x.sum < y.sum;
 	}
-	vis[now]--;
-	return dp[now];
+};
+
+int n, k;
+int gas[2505];
+vector<vector<int>>cost(2505, vector<int>(2, INF));
+vector<pair<int,int>>v[4005];
+priority_queue<inqueue, vector<inqueue>, cmp>pq;
+
+int f(){
+	vector<int>tmp(n+1, 0);
+	tmp[1] = 1;
+	pq.push({gas[1], 0, 1, tmp});
+	
+	while(!pq.empty()){
+		int cost = pq.top().cost;
+		int sum = pq.top().sum;
+		int now = pq.top().idx;
+		vector<int>vis = pq.top().vis;
+		pq.pop();
+		
+		
+	}
 }
 
-int main()
-{
-	scanf("%d %d", &n, &m);
+int main(){
+	cin >> n >> k;
+	
 	for(int i = 1; i <= n; i++){
-		scanf("%d", &gas[i]);
+		cin >> gas[i];
 	}
-	for(int i = 0, a, b, c; i < m; i++){
-		scanf("%d %d %d", &a, &b, &c);
-		len[a].push_back({b,c});
-		len[b].push_back({a,c});
+	
+	for(int i = 1; i <= k; i++){
+		int a, b, c;
+		cin >> a >> b >> c;
+		v[a].push_back({b, c});
+		v[b].push_back({a, c});
 	}
-	printf("%d", f(1,gas[1]));
+	
+	printf("%d", f());
+	
+	return 0;
 }

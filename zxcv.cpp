@@ -1,34 +1,13 @@
 #include<stdio.h>
-#include<math.h>
-#define LL long long
 
-int t;
-LL int n, table[10001];
+int n, k;
 
-int main()
-{
-	for(int i = 0; i < 10000; i++){
-		table[i] = pow(i+1,3);
-	}
+int main(){
+	scanf("%d %d", &n, &k);
 	
-	scanf("%d", &t);
-	while(t--){
-		int flag = 0;
-		scanf("%lld", &n);
-		int L = 0, R = 9999;
-		while(L <= R){
-			LL int now = table[L] + table[R];
-			if(now > n){
-				R--;
-			}
-			else if(now < n){
-				L++;
-			}
-			else{
-				flag = 1;
-				break;
-			}
+	for(int i = n; i <= k; i++){
+		for(int j = 1; j <= 9; j++){
+			printf("%d*%d=%d\n", i, j, i*j);
 		}
-		printf("%s\n", flag ? "YES" : "NO");
 	}
 }

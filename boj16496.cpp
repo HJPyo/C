@@ -3,47 +3,31 @@
 #include<string>
 using namespace std;
 
-int n;
+int n, mnum = -1;
 string str[1005];
-
-bool cmp(string x, string y){
-	int idx = 0;
-	
-	while(idx < 10){
-		if(x[idx] == '*' && y[idx] == '0') return 1;
-		if(x[idx] == '0' && y[idx] == '*') return 0;
-		if(x[idx] > y[idx]) return 1;
-		if(x[idx] < y[idx]) return 0;
-		idx++;
-	}
-	
-	return 0;
-}
 
 int main(){
 	cin >> n;
 	
 	for(int i = 0; i < n; i++){
 		cin >> str[i];
-		while(str[i].length() < 10){
-			str[i] = str[i] + '*';
+		for(int j = 0; j < str[i].length(); j++){
+			mnum = max(mnum,str[i][j] - '0');
 		}
 	}
 	
-	if(n > 1) sort(str,str+n,cmp);
+	if(mnum == 0){
+		cout << 0;
+		return 0;
+	}
 	
-	int flag = 0;
-	string ans = "";
+	sort(str,str+n,[](string x, string y){	
+		return x+y > y+x;
+	});
 	
 	for(int i = 0; i < n; i++){
-		for(int j = 0; j < 10; j++){
-			if(str[i][j] == '*') break;
-			ans = ans + str[i][j];
-		}
+		cout << str[i];
 	}
-	
-	if(ans[0] == '0') cout << "0";
-	else cout << ans;
 	
 	return 0;
 }

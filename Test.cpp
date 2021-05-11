@@ -1,5 +1,6 @@
 #include<stdio.h>
-
-int main(){
-	printf("%d %d %d", '0', '9', '*');
+#include<math.h>
+main(){
+	long long int n = pow(8,13);
+	printf("%d", n % 7);
 }
